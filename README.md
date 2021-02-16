@@ -1,6 +1,13 @@
 <h2>Motivation</h2>
-python code to do neural network learning
+My experience has taught me that the best way to know a new subject is to code it yourself so here i have python code to do neural network learning. 
+I must say that 90% of the code here was not written by me , in this case the best thing that i can do is fully understand every line of code that i am using from another person code
 
+<h2>Points of interest</h2>
+<ul>
+<li>the code is based on the excellent source of Michael Nielsen <a href="http://neuralnetworksanddeeplearning.com/chap2.html">book</a> and <a href="https://github.com/mnielsen/neural-networks-and-deep-learning">code</a> with about 10% changes by me</li>
+</ul>
+
+<h2>Content</h2>
 <table>
     <tr>
     <td>mnist_nn_playground.py</td>

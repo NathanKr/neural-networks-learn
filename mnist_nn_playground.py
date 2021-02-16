@@ -4,8 +4,8 @@ import scipy.io as sio
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import ndimage
-from nn_learn_back_propagation_engine import Network
-from utils import sigmoid , dsigmoid_to_dval
+from Network import Network
+from utils import sigmoid , dsigmoid_to_dval , make_results_reproducible
 
 current_dir = os.path.abspath(".")
 data_dir = join(current_dir, 'data')
@@ -57,14 +57,16 @@ def plots():
     plt.show()
 
 def learn_nn():
-    net = Network([400, 40 , 10],sigmoid , dsigmoid_to_dval)
-    net.print_shapes()
-    mini_batch = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
-    epochs = 40
-    net.train(mini_batch,epochs,0.01)
-    print('*********************************************')
-    net.print_shapes()
+    net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
+    # mini_batch = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
+    epochs = 10
+    # net.train(mini_batch,epochs,0.01)
+    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
+    mini_batch_size = 1
+    learning_rate = 1 # 1 -> 96.36
+    net.SGD(training_data, epochs, mini_batch_size, learning_rate)
     count_correct=0
+    
     for x_sample , y_sample_fixed in zip(X,Y):
         h = net.feedforward(x_sample)
         i_max = np.argmax(h) # index of max probability
@@ -74,6 +76,7 @@ def learn_nn():
     print(f"percentage of correct estimations : {100*count_correct/m}")
 
 
+make_results_reproducible()
 # plots()    
 learn_nn()
 
