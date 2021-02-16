@@ -56,17 +56,8 @@ def plots():
 
     plt.show()
 
-def learn_nn():
-    net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
-    # mini_batch = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
-    epochs = 10
-    # net.train(mini_batch,epochs,0.01)
-    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
-    mini_batch_size = 1
-    learning_rate = 1 # 1 -> 96.36
-    net.SGD(training_data, epochs, mini_batch_size, learning_rate)
+def compute_success_percentage(net):
     count_correct=0
-    
     for x_sample , y_sample_fixed in zip(X,Y):
         h = net.feedforward(x_sample)
         i_max = np.argmax(h) # index of max probability
@@ -74,6 +65,18 @@ def learn_nn():
            count_correct += 1 
 
     print(f"percentage of correct estimations : {100*count_correct/m}")
+
+def learn_nn():
+    net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
+    # mini_batch = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
+    epochs = 20
+    # net.train(mini_batch,epochs,0.01)
+    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
+    mini_batch_size = 1
+    learning_rate = 1 
+    net.SGD(training_data, epochs, mini_batch_size, learning_rate)
+    compute_success_percentage(net)
+    
 
 
 make_results_reproducible()

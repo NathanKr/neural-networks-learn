@@ -18,6 +18,8 @@ I must say that 90% of the code here was not written by me , in this case the be
     <li>looking at the output vector y is the the following coding : 0 has code 10 all other digit has code same as digit</li>
     <li>it is solved with neural network : layer 1 must have 400 neuron because each sample is 20x20 . using sigmoid activation function last layer must have 10 nurons each representing a digit</li>
     <li>using 10 nurons on last layer we need to update y accordingly to be 5000x10</li>
+    <li>hyper tuning variable used are : # nurons on the hidden layer , batch_size , learning_rate, epochs. i started with #nurons 10 , batch_size 5000 , learning_rate 0.01 , epochs : 40 and looked at the percentage of correct output estimated with feedforward compared to the actual one. i got better and better result by reducing batch_size by half until i got to batch_size of 1. then started to use number of neurons 10,20,30,40,50,60 and saw best results for 30. meanwhile i saw that reducing the epochs to 10 does not deteriate result. and lastly reduce learning_rate by 2 until suprisingly ig 96.36% success for learning_rate of 1 !!! thus the final stup is : 30 neurons in the hidden layer,batch_size of 1 , learning_rate of 1 , ephocs=10</li>
+    <li>actually after i got 96.36% i used ephocs=20 and got even better results of 97.68% this make me wonder if there is a known procedure \ best practices for hyper tuning</li>
     </ul>
     </td>
   </tr>
