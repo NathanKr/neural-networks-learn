@@ -56,26 +56,26 @@ def plots():
 
     plt.show()
 
-def compute_success_percentage(net):
+def compute_success_percentage(net,_X,_Y):
     count_correct=0
-    for x_sample , y_sample_fixed in zip(X,Y):
+    for x_sample , y_sample_fixed in zip(_X,_Y):
         h = net.feedforward(x_sample)
         i_max = np.argmax(h) # index of max probability
         if y_sample_fixed[i_max] == 1:
            count_correct += 1 
 
-    print(f"percentage of correct estimations : {100*count_correct/m}")
+    return  100*count_correct/len(_Y)
 
 def learn_nn():
     net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
-    # mini_batch = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
     epochs = 20
-    # net.train(mini_batch,epochs,0.01)
-    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X,Y)]
+    traning_samples = 5000
+    test_samples = len(Y) - traning_samples
+    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X[:traning_samples,:],Y[:traning_samples,:])]
     mini_batch_size = 1
     learning_rate = 1 
     net.SGD(training_data, epochs, mini_batch_size, learning_rate)
-    compute_success_percentage(net)
+    print(f"percentage of correct estimations : {compute_success_percentage(net,X[-test_samples:,:],Y[-test_samples:,:])}")
     
 
 
