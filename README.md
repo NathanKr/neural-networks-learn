@@ -7,6 +7,16 @@ I must say that 90% of the code here was not written by me , in this case the be
 <li>the code is based on the excellent source of Michael Nielsen <a href="http://neuralnetworksanddeeplearning.com/chap2.html">book</a> and <a href="https://github.com/mnielsen/neural-networks-and-deep-learning">code</a> with about 10% changes by me</li>
 </ul>
 
+<h2>Open issues</h2>
+<ul>
+<li>for 5000 data set samples i get training score of 97.68% check <a href="https://github.com/NathanKr/neural-networks-learn/releases/tag/1.1">tag 1.1</a>. However, it is meaning less without the score on the test data set. for training samples of 4950 and test of 50 the test score is 92% , for 4800 and test of 200 the test score is 89% , for 4700 and 300 the test score is 83 , for 4600 and 400 the test score is 66.75% , for 4550 and 450 the test score is 0% !!!! 
+<ul>
+<li>it is clear that the score get worse when the data test is used but why does it become 0 when test is above 450 samples ?</li>
+<li>what can be done to improve this : 1. check if this a problem of high bias or high variance and act accordingly 2. is there any logic starting again hyper tuning at this situation</li>
+</ul>
+</li>
+</ul>
+
 <h2>Content</h2>
 <table>
     <tr>
