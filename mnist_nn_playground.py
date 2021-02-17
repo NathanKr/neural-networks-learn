@@ -16,9 +16,21 @@ mat_dict = sio.loadmat(file_name)
 X = mat_dict["X"]
 # print(f"X.shape : {X.shape}")
 y = mat_dict["y"]
+
+# make order random so test is ok because mnist is arrange
+# such that each 500 samples are the same
+indices = np.arange(len(y))
+np.random.shuffle(indices)
+X = X[indices]
+y = y[indices]
+
+
 m = y.size
 # print(f"y.shape : {y.shape}")
 Y = np.zeros((m,10))
+
+
+
 
 # fix Y for logistic regression
 for row,y_sample in enumerate(y):
@@ -69,7 +81,7 @@ def compute_success_percentage(net,_X,_Y):
 def learn_nn():
     net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
     epochs = 20
-    traning_samples = 4990
+    traning_samples = 4500
     test_samples = len(Y) - traning_samples
     training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X[:traning_samples,:],Y[:traning_samples,:])]
     mini_batch_size = 1
