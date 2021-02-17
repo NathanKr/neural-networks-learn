@@ -121,10 +121,10 @@ class Network:
                 self.update_mini_batch(mini_batch, learning_rate)
             
             
-            if test_data:
-                print (f"Epoch {j}: {self.evaluate(test_data)} / {n_test}")
-            else:
-                print (f"Epoch {j} complete")
+            # if test_data:
+            #     print (f"Epoch {j}: {self.evaluate(test_data)} / {n_test}")
+            # else:
+            print (f"Epoch {j} complete")
 
 
 

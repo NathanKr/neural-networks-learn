@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import ndimage
 from Network import Network
-from utils import sigmoid , dsigmoid_to_dval , make_results_reproducible
+from utils import sigmoid , dsigmoid_to_dval , make_results_reproducible , make_results_random
+
+make_results_reproducible()
+
 
 current_dir = os.path.abspath(".")
 data_dir = join(current_dir, 'data')
@@ -44,27 +47,27 @@ for row,y_sample in enumerate(y):
 
 
 
-def plot_image(ax , sample):
-    image = X[sample].reshape(20,20)
+def plot_image(ax , sample,_X,_y):
+    image = _X[sample].reshape(20,20)
     rotated_img = ndimage.rotate(image,0)
-    ax.set_title(f'image of X[{sample}] , y[{sample}][0] : {y[sample][0]} ')
+    ax.set_title(f'image of X[{sample}] , y[{sample}][0] : {_y[sample][0]} ')
     ax.imshow(rotated_img, cmap='gray')
 
 
-def plots():
+def plots(_X,_y):
     _ , axs = plt.subplots(2,2)
     # pick a sample to plot
-    plot_image(axs[0,1],4300)
+    plot_image(axs[0,1],4300,_X,_y)
 
     sample = 10
-    plot_image(axs[0,0],sample)
+    plot_image(axs[0,0],sample,_X,_y)
 
     axs[1,0].set_title(f'X[{sample}]')
     axs[1,0].grid()
-    axs[1,0].plot(X[sample],'o')
+    axs[1,0].plot(_X[sample],'o')
 
     axs[1,1].set_title('y')
-    axs[1,1].plot(y,'o')
+    axs[1,1].plot(_y,'o')
 
     plt.show()
 
@@ -78,20 +81,77 @@ def compute_success_percentage(net,_X,_Y):
 
     return  100*count_correct/len(_Y)
 
-def learn_nn():
+def learn_nn(_X,_Y):
     net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
     epochs = 20
-    traning_samples = 4000
-    test_samples = len(Y) - traning_samples
-    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(X[:traning_samples,:],Y[:traning_samples,:])]
+    test_samples_percentage = 20
+    test_samples = int(m * (test_samples_percentage / 100))
+    traning_samples = m - test_samples
+    training_data = [(x_sample.reshape(x_sample.size,1),y_sample.reshape(y_sample.size,1)) for x_sample , y_sample in zip(_X[:traning_samples,:],_Y[:traning_samples,:])]
     mini_batch_size = 1
     learning_rate = 1 
     net.SGD(training_data, epochs, mini_batch_size, learning_rate)
-    print(f"percentage of correct estimations : {compute_success_percentage(net,X[-test_samples:,:],Y[-test_samples:,:])}")
+    correct_test_percentage = compute_success_percentage(net,_X[-test_samples:,:],_Y[-test_samples:,:])
+    correct_training_percentage = compute_success_percentage(net,_X[:traning_samples,:],_Y[:traning_samples,:])
+    return (correct_test_percentage , correct_training_percentage)
+    
+def learning_curves_engine(samples_vec):
+    # correct_trainings = []
+    # correct_tests = []
+    
+    # for samples in samples_vec:
+    #     correct_test_percentage , correct_training_percentage = learn_nn(X[:samples,:],Y[:samples,:])
+    #     correct_trainings.append(100 - correct_training_percentage)
+    #     correct_tests.append(100 - correct_test_percentage)
+
+
+    correct_trainings = range(0,len(samples_vec),1)
+    correct_tests = range(len(samples_vec),0,-1)
+    return (correct_trainings , correct_tests)
+
+
     
 
+def learning_curves():
+    make_results_random() # it is a must 
 
-make_results_reproducible()
-# plots()    
-learn_nn()
+    results = []
+    loops = 10
+    start=500
+    stop=m
+    step = 500
+    samples_vec = range(start,stop,step)
+    np_correct_trainings = np.array([])
+    np_correct_tests = np.array([])
+
+    _ , (ax1, ax2) = plt.subplots(2)
+
+    for _ in range(loops):
+        correct_trainings , correct_tests = learning_curves_engine(samples_vec)
+        results.append((correct_trainings,correct_tests))
+        ax1.plot(samples_vec,correct_tests)
+        # plt.grid()
+        ax2.plot(samples_vec,correct_trainings)
+
+    # c_training , c_tests = results[0]
+    # plt.title("error percentage . training - x , test - o")
+    # plt.xlabel("dataset size")
+    # ax1.plot(samples_vec,c_tests,'o')
+    # plt.grid()
+    # ax2.plot(samples_vec,c_training,'x')
+    plt.show()
+
+    make_results_reproducible() # outside of this function i want reproducible
+
+
+
+def learn():
+    correct_test_percentage , correct_training_percentage = learn_nn(X,Y)
+    print(f"percentage of correct estimations test : {correct_test_percentage}")
+    print(f"percentage of correct estimations training : {correct_training_percentage}")
+
+
+# plots(X,Y)    
+# learn()
+learning_curves()
 
