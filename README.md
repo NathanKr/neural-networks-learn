@@ -35,4 +35,5 @@ I must say that 90% of the code here was not written by me , in this case the be
 <li>use the full mnist data set : 60,000 and check the test result , i am quite sure that i will get better score on the test data set when the over all data set is x10 bigger</li>
 <li>use learning curves to diagnose high bias \ hige variance and make changes e.g. regularization in case of high variance</li>
 <li>look for more structure \ step by step way to do hyper tuning. can i do mini machine learning model for them ??</li>
+<li>i am getting very good results for training - 97.68%. it is interesting to understand is there a common denominator between the images that were not classified correctly</li>
 </ul>
