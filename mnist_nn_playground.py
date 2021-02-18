@@ -1,3 +1,4 @@
+from PIL import Image
 import os
 from os.path import join 
 import scipy.io as sio
@@ -49,9 +50,8 @@ for row,y_sample in enumerate(y):
 
 def plot_image(ax , sample,_X,_y):
     image = _X[sample].reshape(20,20)
-    rotated_img = ndimage.rotate(image,0)
     ax.set_title(f'image of X[{sample}] , y[{sample}][0] : {_y[sample][0]} ')
-    ax.imshow(rotated_img, cmap='gray')
+    ax.imshow(image, cmap='gray')
 
 
 def plots(_X,_y):
@@ -105,8 +105,6 @@ def learning_curves_engine(samples_vec):
         correct_tests.append(100 - correct_test_percentage)
 
 
-    # correct_trainings = range(0,len(samples_vec),1)
-    # correct_tests = range(len(samples_vec),0,-1)
     return (correct_trainings , correct_tests)
 
 
@@ -151,6 +149,6 @@ def learn():
 
 
 # plots(X,Y)    
-# learn()
-learning_curves()
+learn()
+# learning_curves()
 
