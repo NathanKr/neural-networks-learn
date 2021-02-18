@@ -96,49 +96,48 @@ def learn_nn(_X,_Y):
     return (correct_test_percentage , correct_training_percentage)
     
 def learning_curves_engine(samples_vec):
-    # correct_trainings = []
-    # correct_tests = []
+    correct_trainings = []
+    correct_tests = []
     
-    # for samples in samples_vec:
-    #     correct_test_percentage , correct_training_percentage = learn_nn(X[:samples,:],Y[:samples,:])
-    #     correct_trainings.append(100 - correct_training_percentage)
-    #     correct_tests.append(100 - correct_test_percentage)
+    for samples in samples_vec:
+        correct_test_percentage , correct_training_percentage = learn_nn(X[:samples,:],Y[:samples,:])
+        correct_trainings.append(100 - correct_training_percentage)
+        correct_tests.append(100 - correct_test_percentage)
 
 
-    correct_trainings = range(0,len(samples_vec),1)
-    correct_tests = range(len(samples_vec),0,-1)
+    # correct_trainings = range(0,len(samples_vec),1)
+    # correct_tests = range(len(samples_vec),0,-1)
     return (correct_trainings , correct_tests)
 
-
-    
 
 def learning_curves():
     make_results_random() # it is a must 
 
-    results = []
-    loops = 10
-    start=500
-    stop=m
-    step = 500
-    samples_vec = range(start,stop,step)
+    loops_for_mean = 5
+    
+    samples_vec = [50 , 75, 100 , 200 , 500, 1000, 2000,5000]
     np_correct_trainings = np.array([])
     np_correct_tests = np.array([])
 
-    _ , (ax1, ax2) = plt.subplots(2)
+    _ , (ax1, ax2 , ax3) = plt.subplots(3)
 
-    for _ in range(loops):
+    for i in range(loops_for_mean):
+        print(f"\n********* loop : {i+1} ***************\n")
         correct_trainings , correct_tests = learning_curves_engine(samples_vec)
-        results.append((correct_trainings,correct_tests))
+        np_correct_trainings = np.append(np_correct_trainings,correct_trainings)
+        np_correct_tests = np.append(np_correct_tests,correct_tests)
         ax1.plot(samples_vec,correct_tests)
-        # plt.grid()
+        ax1.set_title("test error [%]")
         ax2.plot(samples_vec,correct_trainings)
+        ax2.set_title("traing error [%]")
 
-    # c_training , c_tests = results[0]
-    # plt.title("error percentage . training - x , test - o")
-    # plt.xlabel("dataset size")
-    # ax1.plot(samples_vec,c_tests,'o')
-    # plt.grid()
-    # ax2.plot(samples_vec,c_training,'x')
+
+    np_correct_trainings = np_correct_trainings.reshape((loops_for_mean,len(samples_vec)))
+    np_correct_tests = np_correct_tests.reshape((loops_for_mean,len(samples_vec)))
+    ax3.plot(samples_vec,np_correct_trainings.mean(axis=0),'x')
+    ax3.plot(samples_vec,np_correct_tests.mean(axis=0),'o')
+    ax3.set_title("mean error [%] . training - x , test - o")
+    plt.tight_layout()
     plt.show()
 
     make_results_reproducible() # outside of this function i want reproducible
