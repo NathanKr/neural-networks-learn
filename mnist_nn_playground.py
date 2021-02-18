@@ -73,13 +73,19 @@ def plots(_X,_y):
 
 def compute_success_percentage(net,_X,_Y):
     count_correct=0
+    error_indecis = []
+    i_sample=0
     for x_sample , y_sample_fixed in zip(_X,_Y):
         h = net.feedforward(x_sample)
         i_max = np.argmax(h) # index of max probability
         if y_sample_fixed[i_max] == 1:
            count_correct += 1 
+        else:
+           error_indecis.append(i_sample)                       
 
-    return  100*count_correct/len(_Y)
+        i_sample += 1
+
+    return  (100*count_correct/len(_Y) , error_indecis)
 
 def learn_nn(_X,_Y):
     net = Network([400, 30 , 10],sigmoid , dsigmoid_to_dval)
@@ -91,19 +97,22 @@ def learn_nn(_X,_Y):
     mini_batch_size = 1
     learning_rate = 1 
     net.SGD(training_data, epochs, mini_batch_size, learning_rate)
-    correct_test_percentage = compute_success_percentage(net,_X[-test_samples:,:],_Y[-test_samples:,:])
-    correct_training_percentage = compute_success_percentage(net,_X[:traning_samples,:],_Y[:traning_samples,:])
-    return (correct_test_percentage , correct_training_percentage)
+    (correct_test_percentage , error_test_indices) = \
+        compute_success_percentage(net,_X[-test_samples:,:],_Y[-test_samples:,:])
+    (correct_training_percentage , error_training_indices) = \
+        compute_success_percentage(net,_X[:traning_samples,:],_Y[:traning_samples,:])
+    return ((correct_test_percentage,error_test_indices) , \
+            (correct_training_percentage,error_training_indices))
     
 def learning_curves_engine(samples_vec):
     correct_trainings = []
     correct_tests = []
     
     for samples in samples_vec:
-        correct_test_percentage , correct_training_percentage = learn_nn(X[:samples,:],Y[:samples,:])
+        ((correct_test_percentage ,_),(correct_training_percentage, _)) = \
+            learn_nn(X[:samples,:],Y[:samples,:])
         correct_trainings.append(100 - correct_training_percentage)
         correct_tests.append(100 - correct_test_percentage)
-
 
     return (correct_trainings , correct_tests)
 
@@ -142,13 +151,47 @@ def learning_curves():
 
 
 
-def learn():
-    correct_test_percentage , correct_training_percentage = learn_nn(X,Y)
+def learn(show_error_images=False):
+    _ , (ax1,ax2) = plt.subplots(2,1)
+    ((correct_test_percentage,error_test_indices) , \
+            (correct_training_percentage,error_training_indices)) = learn_nn(X,Y)
     print(f"percentage of correct estimations test : {correct_test_percentage}")
     print(f"percentage of correct estimations training : {correct_training_percentage}")
+    if show_error_images:
+        plot_images(ax1 , error_training_indices,X,y)
+        ax1.set_title("training error images")
+        # ax1xaxis.set_visible(False)
+        plot_images(ax2 , error_test_indices,X,y)
+        ax2.set_title("test error images")
+        # ax2.xaxis.set_visible(False)
+        plt.show()
 
+
+def plot_images(ax , samples,_X,_y):
+    images_in_row = 10
+    images = []
+    sample = 0
+
+    while sample < len(samples):
+        images_row = []
+        for _ in range(images_in_row):
+            images_row.append(_X[sample].reshape(20,20))
+            sample += 1
+            if sample < len(samples):
+                break
+        
+        merged_images_horizontal = np.concatenate(images_row,axis=1)   
+        images.append(merged_images_horizontal)
+
+    merged_images = np.concatenate(images,axis=0)
+    ax.imshow(merged_images, cmap='gray')
+
+
+_ , ax1 = plt.subplots(1)
+plot_images(ax1,[0],X,y)
+plt.show()
 
 # plots(X,Y)    
-learn()
+# learn(True)
 # learning_curves()
 
