@@ -6,7 +6,7 @@ I must say that 90% of the code here was not written by me , in this case the be
 <ul>
 <li>the code is based on the excellent source of Michael Nielsen <a href="http://neuralnetworksanddeeplearning.com/chap2.html">book</a> and <a href="https://github.com/mnielsen/neural-networks-and-deep-learning">code</a> with about 10% changes by me</li>
 <li>for 5000 data set samples i get training score of 97.68% check <a href="https://github.com/NathanKr/neural-networks-learn/releases/tag/1.1">here</a>. However, it is meaning less without the score on the test data set. for training samples of 4950 and test of 50 the test score is 92% , for 4800 and test of 200 the test score is 89% , for 4700 and 300 the test score is 83 , for 4600 and 400 the test score is 66.75% , for 4550 and 450 the test score is 0% !!!! -----> i was able to solve this <a href="https://github.com/NathanKr/neural-networks-learn/releases/tag/1.2">here</a> the reason is the mnist dataset : first 500 data set sample are for digit 0 , next 500 is digit 1 and so on .Thus training 4500 and test on last 500 try to test on digit 9 which was not trained. the solution is to shuffle the data set at the begining</li>
-<li>learning rate : 1. in general for more samples i get better prediction 2. prediction of test and training is almost the same which is very good - no variance problem thus no need for regularization</li>
+<li>learning curves (learning_curves.png): 1. data set of 200 sampling was enough to get ~ 5% 2. prediction of test and training is almost the same which is very good - no variance problem thus no need for regularization </li>
 </ul>
 
 
@@ -32,8 +32,6 @@ I must say that 90% of the code here was not written by me , in this case the be
 
 <h2>Need more investigation</h2>
 <ul>
-<li>use the full mnist data set : 60,000 and check the test result , i am quite sure that i will get better score on the test data set when the over all data set is x10 bigger</li>
-<li>use learning curves to diagnose high bias \ hige variance and make changes e.g. regularization in case of high variance</li>
 <li>look for more structure \ step by step way to do hyper tuning. can i do mini machine learning model for them ??</li>
 <li>i am getting very good results for training - 97.68%. it is interesting to understand is there a common denominator between the images that were not classified correctly</li>
 </ul>
