@@ -33,5 +33,5 @@ I must say that 90% of the code here was not written by me , in this case the be
 <h2>Need more investigation</h2>
 <ul>
 <li>look for more structure \ step by step way to do hyper tuning. can i do mini machine learning model for them ??</li>
-<li>i am getting very good results for training - 97.68%. it is interesting to understand is there a common denominator between the images that were not classified correctly. check fig error_images.png</li>
+<li>i am getting very good results for training - 97.68%. it is interesting to understand is there a common denominator between the images that were not classified correctly. check fig error_images.png for this <a href="https://github.com/NathanKr/neural-networks-learn/releases/tag/1.4">tag</a></li>
 </ul>
