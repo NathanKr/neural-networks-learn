@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import ndimage
 from Network import Network
-from utils import sigmoid , dsigmoid_to_dval , make_results_reproducible , make_results_random
+from utils import plot_images , sigmoid , dsigmoid_to_dval , make_results_reproducible , make_results_random
 
 make_results_reproducible()
 
@@ -149,7 +149,9 @@ def learning_curves():
 
     make_results_reproducible() # outside of this function i want reproducible
 
-
+def get_samples_to_show(_indices , _images_in_row , _max_images_to_show):
+    possible_images = int(len(_indices) / _images_in_row) * _images_in_row
+    return min(possible_images , _max_images_to_show)
 
 def learn(show_error_images=False):
     _ , (ax1,ax2) = plt.subplots(2,1)
@@ -157,41 +159,29 @@ def learn(show_error_images=False):
             (correct_training_percentage,error_training_indices)) = learn_nn(X,Y)
     print(f"percentage of correct estimations test : {correct_test_percentage}")
     print(f"percentage of correct estimations training : {correct_training_percentage}")
+   
     if show_error_images:
-        plot_images(ax1 , error_training_indices,X,y)
-        ax1.set_title("training error images")
-        # ax1xaxis.set_visible(False)
-        plot_images(ax2 , error_test_indices,X,y)
-        ax2.set_title("test error images")
-        # ax2.xaxis.set_visible(False)
+        images_in_row = 20
+        max_images_to_show = 100
+        image_height = 20
+        image_width = 20
+        show_training = get_samples_to_show(error_training_indices ,\
+             images_in_row , max_images_to_show)
+        show_test = get_samples_to_show(error_test_indices , \
+             images_in_row , max_images_to_show)
+        plot_images(ax1 ,images_in_row,image_height, \
+                    image_width, error_training_indices[:show_training],X,y)
+        ax1.set_title(f"training error images. total error images : {len(error_training_indices)}")
+        plot_images(ax2 ,images_in_row,image_height, \
+                    image_width, error_test_indices[:show_test],X,y)
+        ax2.set_title(f"test error images. total error images : {len(error_test_indices)}")
         plt.show()
 
 
-def plot_images(ax , samples,_X,_y):
-    images_in_row = 10
-    images = []
-    sample = 0
-
-    while sample < len(samples):
-        images_row = []
-        for _ in range(images_in_row):
-            images_row.append(_X[sample].reshape(20,20))
-            sample += 1
-            if sample < len(samples):
-                break
-        
-        merged_images_horizontal = np.concatenate(images_row,axis=1)   
-        images.append(merged_images_horizontal)
-
-    merged_images = np.concatenate(images,axis=0)
-    ax.imshow(merged_images, cmap='gray')
 
 
-_ , ax1 = plt.subplots(1)
-plot_images(ax1,[0],X,y)
-plt.show()
 
 # plots(X,Y)    
-# learn(True)
+learn(True)
 # learning_curves()
 
